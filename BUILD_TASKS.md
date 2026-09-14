@@ -1,0 +1,76 @@
+# Arculus website — build task list v3 (14 Sep 2026\)
+
+Consolidated from the design chats. Stack is path C: Astro \+ TypeScript \+ Tailwind, fully static, content as files in the repo, Cloudflare Pages. Each T-task is one Claude Code session; desktop and mobile built together; tick when the Cloudflare Pages preview matches the Figma frame. Figma node map lives in CLAUDE.md.
+
+T7 is the checkpoint: if the build is running well past estimate by then, revisit the path.
+
+## 0 · Setup (Jim, before any code)
+
+- [x] Email AfterDark re registrar / DNS access for arculus.com.au (sent 11 Sep) — awaiting reply  
+- [ ] GitHub organisation; repo `arculus-website`; commit `CLAUDE.md`, `BUILD_TASKS.md`, `docs/compliance-register.md`, `docs/image-register.xlsx`  
+- [ ] Cloudflare account: Pages project linked to repo; Web Analytics enabled; DNS to move here once registrar access lands  
+- [ ] Formspree form (contact → info@) and Mailchimp audience with double opt-in (subscribe); record endpoint/IDs in `content/site.json`  
+- [ ] Fira Sans self-hosted (OFL)  
+- [ ] Olivia123: ask for a dedicated Arculus onboarding URL (generic URL in the meantime)
+
+## 1 · Foundation
+
+- [ ] T1 Scaffold Astro \+ Tailwind \+ TypeScript; tokens in `tailwind.config`; Fira Sans self-hosted; base layout with Cloudflare Web Analytics snippet  
+- [ ] T2 Content files from the model, seeded from the Figma frames (`verified: false`); typed loaders; `documents.json` \+ `insights.json` with the current PDFs; `site.json` (important-information variants, licensing line, form IDs, Olivia123 URL)  
+- [ ] T3 `KeyValueList` (table ≥768 / stack \<768) rendered from fund JSON; static chart image slot (`/public/charts/<fund>-<yyyy-mm>.webp`, hidden \<768, period table carries the numbers)
+
+## 2 · Chassis
+
+- [ ] T4 `Header` desktop with dropdown panels (About, Funds, Wholesale) \+ mobile accordion menu \+ search open state; header button "Link to SS\&C Fund Registry" in gold (external); Private mandates nav link → wholesale landing anchor  
+- [ ] T5 `Footer` (no Complaints, no Acknowledgement, IM as single link; licensing line verbatim from `site.json`; Private mandates → anchor)  
+- [ ] T6 `Breadcrumb`, `ImportantInformation` (three variants from `site.json`: generic S03, fund-specific S05, wholesale S15), `CtaBanner` (navy/warm)  
+- [ ] T7 `HeroLevel1` (home: warm mesh, image strip on mobile) and `HeroLevel2` (navy/warm, compact/full, facts optional, no image on mobile) — **checkpoint**
+
+## 3 · Modules
+
+- [ ] T8 `Statement`, `StrategyAtAGlance` (ladder A− → BBB → PEP), `ContentColumns` (Lucide icons only), `TwoColumnsContent`, `LeftRight`  
+- [ ] T9 `FundOverviewPerformance` (about, ratings row, performance list, chart image ≥768), `RatingsRow` — Lonsec only: "Rated 'Investment Grade' by Lonsec." \+ ratings disclosure; badge shows Investment Grade tier  
+- [ ] T10 `Documents` \+ `DownloadSlice` (+ see-more expander), `ProfileModule` (3-col, 2-col rhythm), `ProductCards`  
+- [ ] T11 `InsightsRow`, `InsightsList` (thumbnail treatment TBC — build with a prop), `FilterTabs`, `SearchInput`, `SearchResultRow`  
+- [ ] T12 `ThreeColumnsContactBanner`, `ContactForm` (Formspree, client validation, success state, `?topic=` pre-fill incl. `private-mandate`), `SubscribeModal` (Mailchimp embed, double opt-in), `AttestationModal` (sessionStorage; ss708/761G wording; decline → home)  
+- [ ] T12a `PrivateMandates` module (tint band, copy left \+ one button "Talk to us about a mandate", key-value facts right) for the wholesale landing page
+
+## 4 · Pages
+
+- [ ] T13 Home (warm hero and fund cards, navy below)  
+- [ ] T14 Fund page template → AFI (navy), PIF (warm/orange); fund-specific important information; three-destination CTA (Invest via Olivia123 \[gold\], Enquire via pre-filled contact form \[rust\], Read PDF)  
+- [ ] T15 Wholesale landing (gate at entry; strategy cards click through once attested) \+ Private mandates module \+ strategy template → A−, BBB, PEP (gated as deep-link safety net; PEP performance figures entirely off-page)  
+- [ ] T16 Investment Management (gated; entity name pending)  
+- [ ] T17 About: Our approach, Governance & oversight (RE \= DDH Graham), Team (CEO \= Sunetha Parag); ESG (needs an inbound link — see register)  
+- [ ] T18 Insights hub (PDF links at launch), Contact, Document library  
+- [ ] T19 Legal: T\&Cs, Privacy Notice, Cookie Policy (short — cookieless analytics; add footer link), Disclosure (copy pending)  
+- [ ] T20 Search (Pagefind incl. PDF text), 404
+
+## 5 · Integration
+
+- [ ] T21 Wire Formspree to info@ and test; confirm Mailchimp double opt-in email copy  
+- [ ] T22 Redirect map from old site URLs; sitemap.xml; robots; OG images  
+- [ ] T23 Accessibility pass (WCAG AA: contrast on gold/amber, focus states, modal focus trap, table semantics)  
+- [ ] T24 Performance pass (export hero mesh gradients and monthly charts at 1440/390 as WebP)
+
+## 6 · Content and compliance (Jim \+ Renny)
+
+- [x] C1 Compliance register returned clean (14 Sep) — remaining open: DDH Graham ABN/AFSL, PIF ARSN (Q5), office address (Q6), Lonsec citation rules (Q8), complaints/AFCA statement (Q9), IM entity name, Disclosure page copy  
+- [ ] C2 Fund numbers verified against latest monthly report; `performanceAsAt` set; `verified: true`  
+- [ ] C3 Documents uploaded: PDS, TMD, last 3 monthlies, quarterly, annual, Lonsec report, policies  
+- [ ] C4 Insights PDFs re-issued with compliant disclaimers (separate workstream); `wholesaleOnly` flags set  
+- [ ] C5 Images licensed per register; Opera House replaced; headshots supplied (eight)  
+- [ ] C6 Lonsec citation rules applied to ratings row  
+- [ ] C7 Note to Renny: ratings now Lonsec only (his item 6 still lists three houses)  
+- [ ] C8 Olivia123 dedicated URL swapped in when supplied
+
+## 7 · Launch
+
+- [ ] L1 Staging review against the compliance register, page by page (Cloudflare Workers staging, noindex)  
+- [ ] L2 DNS cutover; SSL; test forms, attestation and Olivia123 links on production domain  
+- [ ] L3 Handover doc (`docs/MONTHLY.md`): edit fund JSON, add PDF \+ `documents.json` line, export chart from Figma, commit — with a worked example  
+- [ ] L4 Post-launch: test gold external-link colour against rust actions; may revert header button label / external colour
+
+## Parked (do not resolve in code)
+
+EQT as RE (swap once finalised) · Insights image treatment (88px thumb vs none) · article template · interactive charts (add when traffic justifies) · Arculus Capital site launch · wholesale landing hero  
